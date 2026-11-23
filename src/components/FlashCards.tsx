@@ -77,7 +77,7 @@ export default function FlashCards({ ch }: { ch: Character }) {
           ) : !flipped ? (
             <>
               <Text style={s.notation}>{m.notation}</Text>
-              <PlayButton move={m} big />
+              <PlayButton move={m} big inline />
               <Text style={s.q}>{card!.prop.q}</Text>
               <Pressable style={s.flip} onPress={() => setFlipped(true)}><Text style={s.btnText}>Flip</Text></Pressable>
             </>
@@ -94,7 +94,7 @@ export default function FlashCards({ ch }: { ch: Character }) {
                 <Text style={s.link}>View details {details ? '▴' : '▾'}</Text>
               </Pressable>
               {details && <Text style={s.mute}>Damage: {m.damage}{m.notes ? `\n${m.notes}` : ''}</Text>}
-              <PlayButton move={m} big />
+              <PlayButton move={m} big inline />
               <View style={s.btnRow}>
                 <Pressable style={[s.grade, { backgroundColor: '#3a1212' }]} onPress={() => grade('wrong')}><Text style={[s.btnText, { color: '#ff8a8a' }]}>Wrong</Text></Pressable>
                 <Pressable style={[s.grade, { backgroundColor: '#12301a' }]} onPress={() => grade('correct')}><Text style={[s.btnText, { color: '#8ae79c' }]}>Correct</Text></Pressable>

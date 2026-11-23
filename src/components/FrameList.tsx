@@ -153,8 +153,8 @@ function Row({ m, mode, editing, fav, expanded, onFav, onExpand }: {
           {!!m.notes && <Text style={s.moreText}>Notes: {m.notes}</Text>}
           {editing && (
             <TextInput
-              style={s.input} placeholder="Clip URL (https://...)" placeholderTextColor={c.mute}
-              value={clips[m.id] ?? m.clipUrl ?? ''} onChangeText={(t) => setClip(m.id, t)}
+              style={s.input} placeholder={m.clipUrl ? "Custom clip URL (blank = wavu clip)" : "Clip URL (https://...)"} placeholderTextColor={c.mute}
+              value={clips[m.id] ?? ''} onChangeText={(t) => setClip(m.id, t)}
               autoCapitalize="none" autoCorrect={false} keyboardType="url"
             />
           )}

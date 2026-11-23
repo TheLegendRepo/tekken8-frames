@@ -21,7 +21,7 @@ Frame Data has search, Sort by, Filter, View Mode (Default/Compact/Detailed), ta
 Favorites and flash card progress are saved on the device (AsyncStorage). Flash cards: Flip, Wrong, Correct, Ignore.
 
 ## Clips, Guide, Anti Strats
-Per-move `clipUrl` (optional) in the data; the ▶ button opens it. Tap Edit on a character, expand a move, and type a clip URL (saved on device).
+Move clips come from wavu.wiki and are streamed, not bundled. The ▶ button opens the move's page (`src/app/move/[id].tsx`), which plays the clip muted and looping with 0.25x/0.5x/1x speed buttons (`expo-video`). On flash cards, ▶ plays the clip in place so the answer stays hidden. Each move has an optional `clipUrl`; when a move has no clip of its own, it uses the clip of the shortest longer string that starts with it and `clipFrom` names that string. To use a different clip, tap Edit on a character, expand a move, and type a URL (saved on device). Coverage per character and the moves with no clip are in `scripts/clip_coverage.md`.
 `character.guide` / `character.antiStrats` are lists of `{title, body}` sections; each tab also has device-local "My notes".
 
 ## Real data (current)
@@ -29,8 +29,15 @@ Per-move `clipUrl` (optional) in the data; the ▶ button opens it. Tap Edit on 
 See `scripts/coverage_report.md` for per-character coverage and flagged values. Regenerate:
     python3 -I scripts/import_tekkendocs.py <tekkendocs>/data/wavuConvertedCsv <tekkendocs>/app/constants/characterInfoListT8.ts src/data/framedata.json scripts/coverage_report.md
 Values are stored as source strings (e.g. "i15~16", "+13a"); sorting/filtering parse the first number.
+Then attach clips (re-run after the import above, which drops them):
+
+    python3 -I scripts/import_wavu_clips.py
+
+It reads wavu's Cargo `Move` table (`video` field) and `list=allimages` for direct MP4 URLs, and rewrites `scripts/clip_coverage.md`.
+
 `scripts/fetch_wavu.sh` (untested; needs network access to wavu.wiki) dumps wavu's Cargo Move table directly.
 
 ## Credits and data terms
 Frame data comes from [tekkendocs.com](https://tekkendocs.com) and rbnorway.org (their README allows using the data with credit; their code may not be copied and none is used here). The underlying data is from [wavu.wiki](https://wavu.wiki), whose text content is CC0; Tekken game content belongs to Bandai Namco. This app is unofficial and not affiliated with or endorsed by Bandai Namco.
+Move clips are hosted on [wavu.wiki](https://wavu.wiki) and streamed from there; they are recordings of Tekken 8, so the game footage belongs to Bandai Namco.
 This repository has no license file yet; the owner should add one.
