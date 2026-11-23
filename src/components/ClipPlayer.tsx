@@ -1,7 +1,7 @@
 import { useEvent, useEventListener } from 'expo';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { useState } from 'react';
-import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Linking, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { c } from '../theme';
 
 const SPEEDS = [0.25, 0.5, 1] as const;
@@ -32,9 +32,14 @@ export default function ClipPlayer({ url, from }: { url: string; from?: string }
         {status === 'error' && (
           <View style={s.errBox}>
             <Text style={s.overlay}>{error?.message ? 'Could not play this clip here.' : 'Could not load clip.'}</Text>
-            <Pressable onPress={() => Linking.openURL(url).catch(() => {})}>
-              <Text style={s.link}>Open in browser</Text>
-            </Pressable>
+            {Platform.OS === 'web' ? (
+              // A real link on web, since pages in sandboxed frames often block window.open.
+              <Text style={s.link} {...({ href: url, hrefAttrs: { target: '_blank', rel: 'noopener' } } as object)}>Open clip in a new tab</Text>
+            ) : (
+              <Pressable onPress={() => Linking.openURL(url).catch(() => {})}>
+                <Text style={s.link}>Open in browser</Text>
+              </Pressable>
+            )}
           </View>
         )}
       </View>
