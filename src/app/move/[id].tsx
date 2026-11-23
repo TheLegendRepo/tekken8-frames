@@ -37,7 +37,7 @@ function MoveDetail({ chName, m }: { chName: string; m: Move }) {
       </View>
 
       {url ? <ClipPlayer key={url} url={url} from={from} /> : (
-        <View style={s.noClip}><Text style={s.mute}>No clip for this move on wavu.wiki yet. You can add a clip URL under Edit on the character&apos;s frame data.</Text></View>
+        <View style={s.noClip}><Text style={s.mute}>No clip for this move on wavu.wiki or tekkendocs.com yet. You can add a clip URL under Edit on the character&apos;s frame data.</Text></View>
       )}
 
       <View style={s.grid}>
@@ -54,7 +54,9 @@ function MoveDetail({ chName, m }: { chName: string; m: Move }) {
         </View>
       )}
       {!!m.notes && <Text style={s.notes}>{m.notes}</Text>}
-      {!!url && !!m.clipUrl && url === m.clipUrl && <Text style={s.credit}>Clip: wavu.wiki</Text>}
+      {!!url && url === m.clipUrl && !!m.clipSource && (
+        <Text style={s.credit}>Clip: {m.clipSource === 'tekkendocs' ? 'tekkendocs.com' : 'wavu.wiki'}</Text>
+      )}
     </ScrollView>
   );
 }

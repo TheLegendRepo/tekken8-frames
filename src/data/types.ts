@@ -12,7 +12,8 @@ export interface Move {
   notes?: string;
   name?: string; // optional move name
   sourceId?: string; // wavu.wiki Move id, e.g. "Alisa-1,2"
-  clipUrl?: string; // direct MP4 URL on wavu.wiki, streamed in the app (scripts/import_wavu_clips.py)
+  clipUrl?: string; // direct MP4 URL, streamed in the app (scripts/import_clips.py)
+  clipSource?: 'wavu' | 'tekkendocs'; // site that hosts clipUrl
   clipFrom?: string; // set when clipUrl is the clip of a longer string starting with this move, e.g. "1,1"
 }
 
