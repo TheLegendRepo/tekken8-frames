@@ -27,6 +27,7 @@ export default function RootLayout() {
         />
         <Stack.Screen name="search" options={{ title: 'SEARCH' }} />
         <Stack.Screen name="character/[id]" options={{ title: '' }} />
+        <Stack.Screen name="move/[id]" options={{ title: '' }} />
       </Stack>
     </StoreProvider>
   );

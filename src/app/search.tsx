@@ -25,7 +25,7 @@ export default function Search() {
         keyExtractor={(r) => r.m.id}
         ListEmptyComponent={<Text style={s.empty}>{q ? 'No results' : 'Type to search'}</Text>}
         renderItem={({ item }) => (
-          <Link href={{ pathname: '/character/[id]', params: { id: item.ch.id } }} asChild>
+          <Link href={{ pathname: '/move/[id]', params: { id: item.m.id } }} asChild>
             <Pressable style={s.row}>
               <Text style={s.n}>{item.m.notation}</Text>
               <Text style={s.mute}>{item.ch.name}</Text>

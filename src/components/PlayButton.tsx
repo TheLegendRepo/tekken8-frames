@@ -1,29 +1,39 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
-import { Linking, Pressable, StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet, Text } from 'react-native';
 import type { Move } from '../data/types';
 import { useStore } from '../store';
 import { c } from '../theme';
+import ClipPlayer from './ClipPlayer';
 
+/** The clip to play: a user-entered URL wins over the wavu clip from the dataset. */
 export const useClip = (m: Move) => {
   const { clips } = useStore();
-  return (clips[m.id] || m.clipUrl || '').trim();
+  const own = (clips[m.id] || '').trim();
+  return own ? { url: own, from: undefined } : { url: (m.clipUrl || '').trim(), from: m.clipFrom };
 };
 
-// Opens the clip URL (user-entered or from the dataset) in the device's player/browser.
-export default function PlayButton({ move, big }: { move: Move; big?: boolean }) {
-  const url = useClip(move);
+// Opens the move's page, which plays its clip. With `inline`, plays the clip in place instead
+// (used on flash cards, where the move page would give the answer away).
+export default function PlayButton({ move, big, inline }: { move: Move; big?: boolean; inline?: boolean }) {
+  const { url, from } = useClip(move);
+  const [open, setOpen] = useState(false);
   const [msg, setMsg] = useState('');
-  const press = async () => {
-    if (!url) return setMsg('No clip yet. Add a URL under Edit.');
+  const press = () => {
+    if (!inline) return router.push({ pathname: '/move/[id]', params: { id: move.id } });
+    if (!url) return setMsg('No clip for this move yet.');
     if (!/^https?:\/\//i.test(url)) return setMsg('Clip URL must start with http(s)://');
-    try { await Linking.openURL(url); setMsg(''); } catch { setMsg('Could not open clip'); }
+    setMsg('');
+    setOpen(!open);
   };
   return (
     <>
-      <Pressable onPress={press} style={[s.btn, big && s.big, !url && { opacity: 0.55 }]} accessibilityLabel="Play clip">
-        <Text style={[s.icon, big && { fontSize: 26 }]}>▶</Text>
+      <Pressable onPress={press} style={[s.btn, big && s.big, !url && { opacity: 0.55 }]}
+        accessibilityLabel={inline ? (open ? 'Hide clip' : 'Play clip') : 'Open move and play clip'}>
+        <Text style={[s.icon, big && { fontSize: 26 }]}>{inline && open ? '■' : '▶'}</Text>
       </Pressable>
       {!!msg && <Text style={s.msg}>{msg}</Text>}
+      {inline && open && !!url && <ClipPlayer url={url} from={from} />}
     </>
   );
 }

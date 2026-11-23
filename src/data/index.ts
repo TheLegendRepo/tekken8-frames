@@ -6,6 +6,15 @@ export const dataset = raw as unknown as FrameDataset;
 export const characters: Character[] = dataset.characters;
 export const getCharacter = (id?: string) => characters.find((c) => c.id === id);
 
+let moveIndex: Map<string, { ch: Character; move: Move }> | null = null;
+export const getMove = (id?: string) => {
+  if (!moveIndex) {
+    moveIndex = new Map();
+    for (const ch of characters) for (const move of ch.moves) moveIndex.set(move.id, { ch, move });
+  }
+  return id ? moveIndex.get(id) : undefined;
+};
+
 /** First integer in a frame string ("i15~16" -> 15, "-13~-12" -> -13, "+13a" -> 13); null if none. */
 export const numOf = (s: string): number | null => {
   const m = /[+-]?\d+/.exec(s);
